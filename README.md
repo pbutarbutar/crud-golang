@@ -1,5 +1,4 @@
-# crud-golang
-Test
+# Crud-golang & Login, middleware jwt
 
 # Cara Menjalankannya -  (How to run it)
 
@@ -15,3 +14,7 @@ Test
 - go build -o main
 
 - ./main
+
+
+
+`By Parulian | https://www.linkedin.com/in/parulian-butar-butar-3757ba16/`
