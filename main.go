@@ -26,10 +26,10 @@ func initaliseHandlers(router *mux.Router) {
 	router.HandleFunc("/create", controllers.CreateUser).Methods("POST")
 	router.HandleFunc("/login", controllers.Login).Methods("POST")
 
-	router.Handle("/get", utils.MiddlewareValidateToken(http.HandlerFunc(controllers.GetAllUsers)))
-	router.HandleFunc("/get/{user_id}", controllers.GetUserByID).Methods("GET")
-	router.HandleFunc("/update/{user_id}", controllers.UpdateUserByID).Methods("PUT")
-	router.HandleFunc("/delete/{user_id}", controllers.DeletUserByID).Methods("DELETE")
+	router.Handle("/get", utils.MiddlewareValidateToken(http.HandlerFunc(controllers.GetAllUsers))).Methods("GET")
+	router.Handle("/get/{user_id}", utils.MiddlewareValidateToken(http.HandlerFunc(controllers.GetUserByID))).Methods("GET")
+	router.Handle("/update/{user_id}", utils.MiddlewareValidateToken(http.HandlerFunc(controllers.UpdateUserByID))).Methods("PUT")
+	router.Handle("/delete/{user_id}", utils.MiddlewareValidateToken(http.HandlerFunc(controllers.DeletUserByID))).Methods("DELETE")
 }
 
 func initDB() {
