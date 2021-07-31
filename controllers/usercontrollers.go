@@ -7,7 +7,7 @@ import (
 
 	"github.com/pbutarbutar/crud-golang/database"
 	"github.com/pbutarbutar/crud-golang/entity"
-	"github.com/pbutarbutar/crud-golang/utility"
+	"github.com/pbutarbutar/crud-golang/utils"
 
 	"github.com/gorilla/mux"
 )
@@ -27,7 +27,7 @@ func GetUserByID(w http.ResponseWriter, r *http.Request) {
 	key := vars["user_id"]
 
 	var users entity.Users
-	database.Connector.First(&users, key)
+	database.Connector.First(&users, "user_id = ? ", key)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(users)
 }
@@ -38,12 +38,18 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user entity.Users
 	json.Unmarshal(requestBody, &user)
 
-	password, err := utility.HashPassword(user.Password)
+	password, err := utils.HashPassword(user.Password)
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
+		apiResp := entity.ApiResponse{}
+		apiResp.Status = http.StatusBadRequest
+		apiResp.Success = false
+		apiResp.Message = "Erro Hashpassword"
+		json.NewEncoder(w).Encode(apiResp)
 		return
 	}
+
 	user.Password = password
 
 	database.Connector.Create(user)
@@ -57,6 +63,21 @@ func UpdateUserByID(w http.ResponseWriter, r *http.Request) {
 	requestBody, _ := ioutil.ReadAll(r.Body)
 	var user entity.Users
 	json.Unmarshal(requestBody, &user)
+
+	password, err := utils.HashPassword(user.Password)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnauthorized)
+		apiResp := entity.ApiResponse{}
+		apiResp.Status = http.StatusBadRequest
+		apiResp.Success = false
+		apiResp.Message = "Erro Hashpassword"
+		json.NewEncoder(w).Encode(apiResp)
+		return
+	}
+
+	user.Password = password
+
 	database.Connector.Save(&user)
 
 	w.Header().Set("Content-Type", "application/json")
