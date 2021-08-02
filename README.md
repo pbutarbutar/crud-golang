@@ -1,4 +1,4 @@
-# Crud-golang & Login, middleware jwt
+# Crud-golang & Login, middleware jwt and GORM MySQL
 
 `Cara Menjalankannya -  (How to run it)`
 
